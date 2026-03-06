@@ -6,114 +6,115 @@
 #include <stdlib.h>
 #include "heap.h"
 
-static void exchange(HEAP *heap, ELEMENT **array, int a, int b){
-  int temp = heap->H[a];
-  heap->H[a] = heap->H[b];
-  heap->H[b] = temp;
+static void exchange(HEAP *pHeap, ELEMENT **V, int a, int b){
+	int temp = pHeap->H[a];
+	pHeap->H[a] = pHeap->H[b];
+	pHeap->H[b] = temp;
 
-  array[heap->[a]]->pos = a;
-  array[heap->[b]]->pos = b;
+	V[pHeap->H[a]]->pos = a;
+	V[pHeap->H[b]]->pos = b;
 }
 
-void Heapify(HEAP *heap, ELEMENT **array, int i){
-  while(1){
-    int left = 2 * i;
-    int right = left + 1;
-    int smallest = i;
+void Heapify(HEAP *pHeap, ELEMENT **V, int i){
+	while(1){
+		int left = 2 * i;
+		int right = left + 1;
+		int smallest = i;
 
-    if (left <= heap->size && array[heap->H[left]]->key < array[heap->H[smallest]]->key)
-      smallest = left;
+		if (left <= pHeap->size && V[pHeap->H[left]]->key < V[pHeap->H[smallest]]->key)
+			smallest = left;
 
-    if (right <= heap->size && array[heap->H[right]]->key < array[heap->H[smallest]]->key)
-      smallest = right;
+		if (right <= pHeap->size && V[pHeap->H[right]]->key < V[pHeap->H[smallest]]->key)
+			smallest = right;
 
-    if (smallest = i)
-      break;
+		if (smallest == i)
+			break;
 
-    exhange(heap, array, i, smallest);
-    i = smallest;
-  }
-
-void BuildHeap(HEAP *heap, ELEMENT **array){
-  for (int i = heap->size / 2; i >= 1, i--)
-    Heapify(heap, array, i);
+		exchange(pHeap, V, i, smallest);
+		i = smallest;
+	}
 }
 
-ELEMENT* ExtractMin(HEAP *heap, ELEMENT **array){
-  if (heap->size == 0)
-    return NULL;
-
-  int rootindex = heap->H[i];
-  ELEMENT *minElement = array[rootindex];
-
-  exchange(heap, array, i, heap->size);
-
-  minElement->pos = 0;
-  heap->size--;
-
-  if(heap->size > 0)
-    Heapify(heap, array, 1);
-
-  return minElement;
+void BuildHeap(HEAP *pHeap, ELEMENT **V){
+	for (int i = pHeap->size / 2; i >= 1; i--)
+		Heapify(pHeap, V, i);
 }
 
-void DecreaseKey(HEAP *heap, ELEMENT **array, int index, double newKey){
-  if (index < 1 || index > heap->capacity)
-    return;
+ELEMENT* ExtractMin(HEAP *pHeap, ELEMENT **V){
+	if (pHeap->size == 0)
+		return NULL;
 
-  if (array[index]->pos == 0)
-    return;
+	int rootindex = pHeap->H[1];
+	ELEMENT *minElement = V[rootindex];
 
-  if(newKey >= array[index]->key)
-    return;
+	exchange(pHeap, V, 1, pHeap->size);
 
-  array[index]->key = newKey;
+	minElement->pos = 0;
+	pHeap->size--;
 
-  int pos = array[index]->pos;
+	if(pHeap->size > 0)
+		Heapify(pHeap, V, 1);
 
-  while(pos > 1){
-    int par = pos / 2;
-
-    if(array[heap->H[par]]->key <= array[heap->H[pos]]->key)
-      break;
-
-    exchange(heap, array, pos, par);
-    pos = par;
-  }
+	return minElement;
 }
 
-void InsertHeap(HEAP *heap, ELEMENT **array, int index){
-  if (index < 1 || index > heap->capacity)
-    return;
+void DecreaseKey(HEAP *pHeap, ELEMENT **V, int index, double newKey){
+	if (index < 1 || index > pHeap->capacity)
+		return;
 
-  if (array[index]->pos != 0)
-    return;
+	if (V[index]->pos == 0)
+		return;
 
-  heap->size++;
-  int current = heap->size;
+	if(newKey >= V[index]->key)
+		return;
 
-  heap->H[current] = index;
-  array[index]->pos = current;
+	V[index]->key = newKey;
 
-  while(current > 1){
-    int par = current / 2;
+	int pos = V[index]->pos;
 
-    if(array[heap->H[parent]]->key <= array[heap->H[current]]->key)
-      break;
+	while(pos > 1){
+		int par = pos / 2;
 
-    exchange(heap, array, current, par);
-    current = par;
-  }
+		if(V[pHeap->H[par]]->key <= V[pHeap->H[pos]]->key)
+			break;
+
+		exchange(pHeap, V, pos, par);
+		pos = par;
+	}
 }
 
-void PrintArray(ELEMENT **array, int n){
-  for(int i = 1; i <= n; i++)
-    printf("%d %lf %d\n", array[i]->index, array[i]->key, array[i]->pos);
+void InsertHeap(HEAP *pHeap, ELEMENT **V, int index){
+	if (index < 1 || index > pHeap->capacity)
+		return;
+
+	if (V[index]->pos != 0)
+		return;
+
+	pHeap->size++;
+	int current = pHeap->size;
+
+	pHeap->H[current] = index;
+	V[index]->pos = current;
+
+	while(current > 1){
+		int par = current / 2;
+
+		if(V[pHeap->H[par]]->key <= V[pHeap->H[current]]->key)
+			break;
+
+		exchange(pHeap, V, current, par);
+		current = par;
+	}
 }
 
-void PrintHeap(HEAP *heap, ELEMENT **array){
-  printf("Capacity = %d, size = %d\n", heap->capacity, heap->size;
+void PrintArray(ELEMENT **V, int n){
+	for(int i = 1; i <= n; i++)
+		printf("%d %lf %d\n", V[i]->index, V[i]->key, V[i]->pos);
+}
 
-  for (int i = 1; i <= heap->size, i++)
-    printf("H[%d] = %d\n", i, heap->H[i]);
+void PrintHeap(HEAP *pHeap, ELEMENT **V){
+	printf("Capacity = %d, size = %d\n", pHeap->capacity, pHeap->size);
+
+	for (int i = 1; i <= pHeap->size; i++)
+		printf("H[%d] = %d\n", i, pHeap->H[i]);
 }
