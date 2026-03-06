@@ -28,7 +28,7 @@ int nextInstruction(char *Word, double *key){
     double newKey;
     if(fscanf(stdin, "%lf %lf", key, &newKey) != 2)
       return 0;
-    key[i] = newKey;
+    key[1] = newKey;
     return 1;
   }
   
